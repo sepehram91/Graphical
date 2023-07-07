@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Data Entry and Graphing</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fafafa;
+        color: #333;
+    }
+    h1 {
+        color: #0077cc;
+    }
+    table {
+        margin: 20px 0;
+        width: 100%;
+        max-width: 600px;
+        border-collapse: collapse;
+    }
+    table th, table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+    canvas {
+        border: 1px solid #0077cc;
+    }
+    input[type="text"] {
+        padding: 5px;
+        margin: 5px 0;
+    }
+    button {
+        background-color: #0077cc;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        margin: 10px 0;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #005999;
+    }
+</style>
+</head>
+<body>
+<h1>Data Entry and Graphing</h1>
+<table id="table"> <!-- added id here -->
+<tr>
+<th>x</th>
+<th>y</th>
+</tr>
+</table>
+
+<script>
+function addEntry() {
+var x = document.getElementById("x").value;
+var y = document.getElementById("y").value;
+var row = document.createElement("tr");
+var cell1 = document.createElement("td");
+var cell2 = document.createElement("td");
+cell1.innerHTML = x;
+cell2.innerHTML = y;
+row.appendChild(cell1);
+row.appendChild(cell2);
+document.getElementById("table").appendChild(row);
+
+drawGraph(); // draw graph after adding new entry
+}
+</script>
+
+<input type="text" id="x" placeholder="x-coordinate">
+<input type="text" id="y" placeholder="y-coordinate">
+<button onclick="addEntry()">Add Entry</button>
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<script>
+var ctx = document.getElementById("canvas").getContext("2d");
+
+function drawGraph() {
+var points = [];
+for (var i = 1; i < document.getElementById("table").rows.length; i++) { // skip the first row
+var row = document.getElementById("table").rows[i];
+var x = parseFloat(row.cells[0].innerHTML);
+var y = parseFloat(row.cells[1].innerHTML);
+points.push([x, y]);
+}
+
+ctx.clearRect(0, 0, 400, 400);
+
+// Draw x and y axes
+ctx.beginPath();
+ctx.moveTo(0, 200);
+ctx.lineTo(400, 200);
+ctx.moveTo(200, 0);
+ctx.lineTo(200, 400);
+ctx.stroke();
+
+ctx.beginPath();
+for (var i = 0; i < points.length - 1; i++) {
+var x1 = points[i][0] + 200;  // Translated for x-axis
+var y1 = 200 - points[i][1];  // Translated for y-axis
+var x2 = points[i + 1][0] + 200; // Translated for x-axis
+var y2 = 200 - points[i + 1][1]; // Translated for y-axis
+ctx.moveTo(x1, y1);
+ctx.lineTo(x2, y2);
+}
+ctx.stroke();
+}
+</script>
+
+</body>
+</html>
